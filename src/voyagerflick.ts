@@ -3,6 +3,7 @@ import { ServerProps } from "./types/serverprops";
 import net from "net";
 import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
+import { HttpRequest } from "./utils/HttpRequest";
 let voyagerflickServer: VoyagerFlick;
 class VoyagerFlick {
   server: ServerProps;
@@ -19,13 +20,20 @@ class VoyagerFlick {
         const parser = new HttpRequestParser();
 
         parser.parse(data.toString());
-
-        let httpresponse = new HttpResponse();
+        const httpRequest = new HttpRequest();
+        httpRequest.buildRequest(parser.getBody());
+        let httpResponse = new HttpResponse();
         if (this.server.getMapping[parser.getPath()]) {
-          this.server.getMapping[parser.getPath()](parser, httpresponse);
+          this.server.getMapping[parser.getPath()](httpRequest, httpResponse);
+          console.log(httpResponse.body, " ", httpResponse.status);
+          console.log("HERE");
+          const response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: text/plain\r\n\r\n${httpResponse.body}\r\n`;
+          console.log(response);
+          socket.write(response, "utf-8");
+          socket.end();
+        } else {
+          socket.write(`Server received: ${data}`);
         }
-
-        socket.write(`Server received: ${data}`);
       });
 
       socket.on("end", () => {
