@@ -1,47 +1,41 @@
 import { hostname } from "os";
-import { ServerProps } from "./types/serverprops";
+import { ServerProps } from "./types/alltypes";
 import net from "net";
 import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
 import { HttpRequest } from "./utils/HttpRequest";
 let voyagerflickServer: VoyagerFlick;
 class VoyagerFlick {
-  server: ServerProps;
-  constructor() {
-    this.server = { get: {}, post: {} };
-  }
-
+  routeStore = RouteStore.getInstance();
   public listen(port: string, callback: Function) {
     const tcpServer = net.createServer((socket) => {
       console.log("Client connected.");
 
       socket.on("data", (data) => {
-        const parser = new HttpRequestParser();
+        const rawRequest = new HttpRequestParser();
 
-        parser.parse(data.toString());
+        rawRequest.parse(data.toString());
 
         const httpRequest = new HttpRequest();
-        httpRequest.buildRequest(parser.getBody(), parser.getHeaders());
+        httpRequest.buildRequest({
+          body: rawRequest.getBody(),
+          headers: rawRequest.getHeaders(),
+          method: rawRequest.getMethod(),
+          path: rawRequest.getPath(),
+          version: rawRequest.getVersion(),
+        });
         let httpResponse = new HttpResponse();
-        if (this.server.get[parser.getPath()]) {
-          this.server.get[parser.getPath()](httpRequest, httpResponse);
-          console.log(JSON.stringify(httpResponse.body));
+        let response = `HTTP/1.1 404 OK\r\nContent-Type: text/plain\r\n\r\nCan't ${httpRequest.method} to ${httpRequest.path}\r\n`;
+        if (this.routeStore.getRoute(httpRequest.path)) {
+          this.server.get[httpRequest.path](httpRequest, httpResponse);
           if (httpResponse.type == "application/json") {
-            const response = `HTTP/1.1 ${
-              httpResponse.status
-            } OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${JSON.stringify(
-              httpResponse.body
-            )}\r\n`;
-            socket.write(response, "utf-8");
-            socket.end();
+            response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${
+              httpResponse.type
+            }\r\n\r\n${JSON.stringify(httpResponse.body)}\r\n`;
           } else {
-            const response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
-
-            socket.write(response, "utf-8");
-            socket.end();
+            response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
           }
         } else {
-          const response = `HTTP/1.1 404 OK\r\nContent-Type: text/plain\r\n\r\nCan't ${parser.getMethod()} to ${parser.getPath()}\r\n`;
           socket.write(response);
           socket.end();
         }

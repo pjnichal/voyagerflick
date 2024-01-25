@@ -1,1 +1,1 @@
-export * from "./serverprops"
+export * from "./alltypes";
