@@ -1,4 +1,4 @@
-class RouteStore {
+export class RouteStore {
   private static instance: RouteStore;
   private records: Record<string, Function> = {};
 

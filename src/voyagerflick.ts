@@ -1,8 +1,9 @@
-
 import net from "net";
 import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
 import { HttpRequest } from "./utils/HttpRequest";
+import { RouteStore } from "./helpers/RouteStore";
+// import RouteStore from "./helpers/RouteStore";
 let voyagerflickServer: VoyagerFlick;
 class VoyagerFlick {
   routeStore = RouteStore.getInstance();
@@ -34,10 +35,9 @@ class VoyagerFlick {
           } else {
             response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
           }
-        } else {
-          socket.write(response);
-          socket.end();
         }
+        socket.write(response);
+        socket.end();
       });
 
       socket.on("end", () => {
@@ -51,7 +51,7 @@ class VoyagerFlick {
   public get(path: string, method: Function) {
     this.routeStore.addRoute(path, method);
   }
-  }
+}
 export const voyagerflick = () => {
   if (voyagerflickServer) {
     return voyagerflickServer;
