@@ -1,4 +1,4 @@
-export type ServerProps={
-    getMapping:Record<string,Function>,
-    postMapping:Record<string,Function>
-}
+export type ServerProps = {
+  get: Record<string, Function>;
+  post: Record<string, Function>;
+};

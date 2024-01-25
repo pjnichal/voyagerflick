@@ -8,7 +8,7 @@ let voyagerflickServer: VoyagerFlick;
 class VoyagerFlick {
   server: ServerProps;
   constructor() {
-    this.server = { getMapping: {}, postMapping: {} };
+    this.server = { get: {}, post: {} };
   }
 
   public listen(port: string, callback: Function) {
@@ -16,23 +16,34 @@ class VoyagerFlick {
       console.log("Client connected.");
 
       socket.on("data", (data) => {
-        // console.log(`Received data from client: ${data}`);
         const parser = new HttpRequestParser();
 
         parser.parse(data.toString());
+
         const httpRequest = new HttpRequest();
-        httpRequest.buildRequest(parser.getBody());
+        httpRequest.buildRequest(parser.getBody(), parser.getHeaders());
         let httpResponse = new HttpResponse();
-        if (this.server.getMapping[parser.getPath()]) {
-          this.server.getMapping[parser.getPath()](httpRequest, httpResponse);
-          console.log(httpResponse.body, " ", httpResponse.status);
-          console.log("HERE");
-          const response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: text/plain\r\n\r\n${httpResponse.body}\r\n`;
-          console.log(response);
-          socket.write(response, "utf-8");
-          socket.end();
+        if (this.server.get[parser.getPath()]) {
+          this.server.get[parser.getPath()](httpRequest, httpResponse);
+          console.log(JSON.stringify(httpResponse.body));
+          if (httpResponse.type == "application/json") {
+            const response = `HTTP/1.1 ${
+              httpResponse.status
+            } OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${JSON.stringify(
+              httpResponse.body
+            )}\r\n`;
+            socket.write(response, "utf-8");
+            socket.end();
+          } else {
+            const response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
+
+            socket.write(response, "utf-8");
+            socket.end();
+          }
         } else {
-          socket.write(`Server received: ${data}`);
+          const response = `HTTP/1.1 404 OK\r\nContent-Type: text/plain\r\n\r\nCan't ${parser.getMethod()} to ${parser.getPath()}\r\n`;
+          socket.write(response);
+          socket.end();
         }
       });
 
@@ -45,13 +56,13 @@ class VoyagerFlick {
     });
   }
   public get(path: string, method: Function) {
-    this.server.getMapping[path] = method;
+    this.server.get[path] = method;
   }
   public post(path: string, method: Function) {
-    this.server.postMapping[path] = method;
+    this.server.post[path] = method;
   }
   public testrun(path: string) {
-    const fun = this.server.getMapping[path];
+    const fun = this.server.get[path];
     fun();
   }
 }
