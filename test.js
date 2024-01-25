@@ -7,7 +7,10 @@ app.get("/", (req, res) => {
   console.log(data);
   // res.send({ body: `Hello Voyager ${data.name} ${data.age}`, status: 404 });
   res.json({
-    body: { message: "Hello " + data.name, age: "Tour age is " + data.age },
+    body: {
+      message: "Hello YASH DLA " + data.name,
+      age: "Tour age is " + data.age,
+    },
     status: 404,
   });
 });
