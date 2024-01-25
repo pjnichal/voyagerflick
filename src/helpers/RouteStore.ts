@@ -15,7 +15,7 @@ class RouteStore {
     this.records[key] = value;
   }
 
-  public getRoute(key: string): Function | undefined {
+  public getRoute(key: string): Function {
     return this.records[key];
   }
 

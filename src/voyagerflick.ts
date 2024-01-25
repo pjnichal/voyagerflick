@@ -1,5 +1,4 @@
-import { hostname } from "os";
-import { ServerProps } from "./types/alltypes";
+
 import net from "net";
 import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
@@ -27,7 +26,7 @@ class VoyagerFlick {
         let httpResponse = new HttpResponse();
         let response = `HTTP/1.1 404 OK\r\nContent-Type: text/plain\r\n\r\nCan't ${httpRequest.method} to ${httpRequest.path}\r\n`;
         if (this.routeStore.getRoute(httpRequest.path)) {
-          this.server.get[httpRequest.path](httpRequest, httpResponse);
+          this.routeStore.getRoute(httpRequest.path)(httpRequest, httpResponse);
           if (httpResponse.type == "application/json") {
             response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${
               httpResponse.type
@@ -50,16 +49,9 @@ class VoyagerFlick {
     });
   }
   public get(path: string, method: Function) {
-    this.server.get[path] = method;
+    this.routeStore.addRoute(path, method);
   }
-  public post(path: string, method: Function) {
-    this.server.post[path] = method;
   }
-  public testrun(path: string) {
-    const fun = this.server.get[path];
-    fun();
-  }
-}
 export const voyagerflick = () => {
   if (voyagerflickServer) {
     return voyagerflickServer;

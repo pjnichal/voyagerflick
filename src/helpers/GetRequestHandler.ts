@@ -1,1 +1,1 @@
-class GetRequestHandler {}
+export class GetRequestHandler {}
