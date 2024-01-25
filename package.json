@@ -14,9 +14,16 @@
     "voyagerflick",
     "firstpackage"
   ],
+  "homepage": "https://pravinnichal.in",
+  "repository": {
+    "url": "https://github.com/pjnichal/voyagerflick"
+  },
   "license": "MIT",
   "dependencies": {
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.6"
   }
 }
