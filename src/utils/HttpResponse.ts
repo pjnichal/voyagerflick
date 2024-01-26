@@ -8,7 +8,7 @@ export class HttpResponse {
     return;
   }
   json({ body, status }: { body: string; status: number }) {
-    this.body = body;
+    this.body = JSON.stringify(body);
     this.status = status;
     this.type = "application/json";
     return;

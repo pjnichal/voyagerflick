@@ -16,13 +16,7 @@ class VoyagerFlick {
         let response = `HTTP/1.1 404 OK\r\nContent-Type: text/plain\r\n\r\nCan't ${httpRequest.method} to ${httpRequest.path}\r\n`;
         if (this.routeStore.getRoute(httpRequest.path)) {
           this.routeStore.getRoute(httpRequest.path)(httpRequest, httpResponse);
-          if (httpResponse.type == "application/json") {
-            response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${
-              httpResponse.type
-            }\r\n\r\n${JSON.stringify(httpResponse.body)}\r\n`;
-          } else {
-            response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
-          }
+          response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
         }
         socket.write(response);
         socket.end();
