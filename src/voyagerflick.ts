@@ -3,10 +3,10 @@ import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
 import { HttpRequest } from "./utils/HttpRequest";
 import { RouteStore } from "./helpers/RouteStore";
-let voyagerflickServer: VoyagerFlick;
+
 class VoyagerFlick {
   routeStore = RouteStore.getInstance();
-  public listen(port: string, callback: Function) {
+  public listen(port: number, callback: Function) {
     const tcpServer = net.createServer((socket) => {
       console.log("Client connected.");
 
@@ -52,6 +52,7 @@ class VoyagerFlick {
   }
 }
 export const voyagerflick = () => {
+  let voyagerflickServer;
   if (voyagerflickServer) {
     return voyagerflickServer;
   }
