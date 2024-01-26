@@ -2,6 +2,7 @@ import net from "net";
 import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
 import { RouteStore } from "./helpers/RouteStore";
+import { HttpRequest } from "./utils/HttpRequest";
 
 class VoyagerFlick {
   routeStore = RouteStore.getInstance();
@@ -16,8 +17,9 @@ class VoyagerFlick {
         let response = `HTTP/1.1 404 OK\r\nContent-Type: text/plain\r\n\r\nCan't ${httpRequest.method} to ${httpRequest.path}\r\n`;
         if (this.routeStore.getRoute(httpRequest.path)) {
           this.routeStore.getRoute(httpRequest.path)(httpRequest, httpResponse);
-          response = `HTTP/1.1 ${httpResponse.status} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
+          response = `HTTP/1.1 ${httpResponse.statusCode} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
         }
+        console.log(response);
         socket.write(response);
         socket.end();
       });
@@ -30,7 +32,10 @@ class VoyagerFlick {
       callback();
     });
   }
-  public get(path: string, method: Function) {
+  public get(
+    path: string,
+    method: (req: HttpRequest, res: HttpResponse) => void
+  ) {
     this.routeStore.addRoute(path, method);
   }
 }

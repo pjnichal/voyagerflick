@@ -1,15 +1,19 @@
 export class HttpResponse {
   body: string = "";
-  status: number = 500;
+  statusCode: number = 200;
   type: string = "text/plain";
-  send({ body, status }: { body: string; status: number }) {
+  send(body: string) {
     this.body = body;
-    this.status = status;
+
     return;
   }
-  json({ body, status }: { body: string; status: number }) {
+  status(status: number) {
+    this.statusCode = status;
+    return this;
+  }
+  json(body: Object) {
     this.body = JSON.stringify(body);
-    this.status = status;
+
     this.type = "application/json";
     return;
   }
