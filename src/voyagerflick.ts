@@ -3,6 +3,7 @@ import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
 import { RouteStore } from "./helpers/RouteStore";
 import { HttpRequest } from "./utils/HttpRequest";
+import { GetRequestHandler } from "./helpers/GetRequestHandler";
 
 class VoyagerFlick {
   routeStore = RouteStore.getInstance();
@@ -15,10 +16,13 @@ class VoyagerFlick {
         const httpRequest = this.rawRequest.parse(data.toString());
         let httpResponse = new HttpResponse();
         let response = `HTTP/1.1 404 OK\r\nContent-Type: text/plain\r\n\r\nCan't ${httpRequest.method} to ${httpRequest.path}\r\n`;
-        if (this.routeStore.getRoute(httpRequest.path)) {
-          this.routeStore.getRoute(httpRequest.path)(httpRequest, httpResponse);
-          response = `HTTP/1.1 ${httpResponse.statusCode} OK\r\nContent-Type: ${httpResponse.type}\r\n\r\n${httpResponse.body}\r\n`;
+        switch (httpRequest.method) {
+          case "GET":
+            response =
+              GetRequestHandler.getInstance().handleGetRequest(httpRequest);
+            break;
         }
+
         console.log(response);
         socket.write(response);
         socket.end();
