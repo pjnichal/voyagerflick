@@ -14,7 +14,7 @@ class VoyagerFlick {
         const rawRequest = new HttpRequestParser();
 
         rawRequest.parse(data.toString());
-
+        
         const httpRequest = new HttpRequest();
         httpRequest.buildRequest({
           body: rawRequest.getBody(),
