@@ -1,7 +1,6 @@
 import net from "net";
 import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
-import { HttpRequest } from "./utils/HttpRequest";
 import { RouteStore } from "./helpers/RouteStore";
 
 class VoyagerFlick {
