@@ -14,8 +14,7 @@ class VoyagerFlick {
 
       socket.on("data", (data) => {
         const httpRequest = this.rawRequest.parse(data.toString());
-        let httpResponse = new HttpResponse();
-        let response = `HTTP/1.1 404 OK\r\nContent-Type: text/plain\r\n\r\nCan't ${httpRequest.method} to ${httpRequest.path}\r\n`;
+        let response = "";
         switch (httpRequest.method) {
           case "GET":
             response =
