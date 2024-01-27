@@ -16,8 +16,8 @@ export class GetRequestHandler {
 
   public handleGetRequest(httpRequest: HttpRequest) {
     let httpResponse = new HttpResponse();
-    if (this.routeStore.getRoute(httpRequest.path)) {
-      this.routeStore.getRoute(httpRequest.path)(httpRequest, httpResponse);
+    if (this.routeStore.getGetRoute(httpRequest.path)) {
+      this.routeStore.getGetRoute(httpRequest.path)(httpRequest, httpResponse);
       return this.responseGenerator.responseGenerator(httpResponse);
     }
 

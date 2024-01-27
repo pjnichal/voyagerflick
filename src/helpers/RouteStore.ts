@@ -1,6 +1,6 @@
 export class RouteStore {
   private static instance: RouteStore;
-  private records: Record<string, Function> = {};
+  private records: Record<string, Record<string, Function>> = {};
 
   private constructor() {}
 
@@ -11,15 +11,18 @@ export class RouteStore {
     return RouteStore.instance;
   }
 
-  public addRoute(key: string, value: Function): void {
-    this.records[key] = value;
+  public addGetRoute(key: string, value: Function): void {
+    if (!this.records["GET"]) {
+      this.records["GET"] = {};
+    }
+    this.records["GET"][key] = value;
   }
 
-  public getRoute(key: string): Function {
-    return this.records[key];
+  public getGetRoute(key: string): Function {
+    return this.records["GET"][key];
   }
 
-  public getAllRoutes(): Record<string, Function> {
+  public getAllRoutes(): Record<string, Record<string, Function>> {
     return this.records;
   }
 

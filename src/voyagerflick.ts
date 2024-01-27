@@ -42,7 +42,7 @@ class VoyagerFlick {
     path: string,
     method: (req: HttpRequest, res: HttpResponse) => void
   ) {
-    this.routeStore.addRoute(path, method);
+    this.routeStore.addGetRoute(path, method);
   }
 }
 export const voyagerflick = () => {
