@@ -1,6 +1,7 @@
 const { voyagerflick } = require("./dist/index");
 
 const app = voyagerflick();
+
 app.get("/", (req, res) => {
   const data = JSON.parse(req.body);
 
@@ -10,8 +11,6 @@ app.get("/", (req, res) => {
   });
 });
 app.post("/", (req, res) => {
-
-
   res.json({
     age: "Tour age is " + 22,
   });

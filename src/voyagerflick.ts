@@ -38,7 +38,7 @@ class VoyagerFlick {
     this.routeStore.addPostRoute(path, method);
   }
 }
-export const voyagerflick = () => {
+export const voyagerflick = (): VoyagerFlick => {
   let voyagerflickServer;
   if (voyagerflickServer) {
     return voyagerflickServer;
