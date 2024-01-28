@@ -1,20 +1,13 @@
 const { voyagerflick } = require("./dist/index");
-
 const app = voyagerflick();
 
-app.get("/", (req, res) => {
-  const data = JSON.parse(req.body);
+app.get("/getTest", (req, res) => {
+  res.status(200).send("YEAHH");
+});
+app.get("/getJson", (req, res) => {
+  res.status(200).json({ message: "JSON WORKING" });
+});
 
-  res.status(404).json({
-    message: "Hello " + data.name,
-    age: "Tour age is " + data.age,
-  });
-});
-app.post("/", (req, res) => {
-  res.json({
-    age: "Tour age is " + 22,
-  });
-});
-app.listen("3000", () => {
-  console.log("TCP Created");
+app.listen("8080", () => {
+  console.log("Sever Running on 8080");
 });
