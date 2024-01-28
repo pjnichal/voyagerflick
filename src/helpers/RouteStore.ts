@@ -4,6 +4,11 @@ interface IRouteStore {
   addPatchRoute(key: string, value: Function): void;
   addDeleteRoute(key: string, value: Function): void;
   addPutRoute(key: string, value: Function): void;
+  getGetRoute(key: string): Function;
+  getPostRoute(key: string): Function;
+  getDeleteRoute(key: string): Function;
+  getPutRoute(key: string): Function;
+  getPatchRoute(key: string): Function;
 }
 
 export class RouteStore implements IRouteStore {
@@ -11,6 +16,15 @@ export class RouteStore implements IRouteStore {
   private records: Record<string, Record<string, Function>> = {};
 
   private constructor() {}
+  getDeleteRoute(key: string): Function {
+    throw new Error("Method not implemented.");
+  }
+  getPutRoute(key: string): Function {
+    throw new Error("Method not implemented.");
+  }
+  getPatchRoute(key: string): Function {
+    throw new Error("Method not implemented.");
+  }
   public static getInstance(): RouteStore {
     if (!RouteStore.instance) {
       RouteStore.instance = new RouteStore();
