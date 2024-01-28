@@ -20,7 +20,6 @@ export class GetRequestHandler {
       this.routeStore.getGetRoute(httpRequest.path)(httpRequest, httpResponse);
       return this.responseGenerator.responseGenerator(httpResponse);
     }
-
     return this.responseGenerator.routeNotFoundResponse(httpRequest);
   }
 }
