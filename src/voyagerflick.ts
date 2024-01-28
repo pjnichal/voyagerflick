@@ -19,6 +19,9 @@ class VoyagerFlick {
           case "GET":
             response =
               GetRequestHandler.getInstance().handleGetRequest(httpRequest);
+
+            break;
+          case "POST":
             break;
           default:
             response = `HTTP/1.1 404 SORRY_MATE\r\nContent-Type: text/plain\r\n\r\nHaven't handle this case mate\r\n`;
