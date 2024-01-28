@@ -11,17 +11,14 @@ class VoyagerFlick {
   requestHandler = RequestHandler.getInstance();
   public listen(port: number, callback: Function) {
     const tcpServer = net.createServer((socket) => {
-      console.log("Client connected.");
-
       socket.on("data", (data) => {
         const httpRequest = this.rawRequest.parse(data.toString());
         let response = this.requestHandler.handleGetRequest(httpRequest);
         socket.write(response);
         socket.end();
       });
-
-      socket.on("end", () => {
-        console.log("Client disconnected.");
+      socket.on("error", (error) => {
+        console.error("Socket error:", error);
       });
     });
     tcpServer.listen(port, () => {
