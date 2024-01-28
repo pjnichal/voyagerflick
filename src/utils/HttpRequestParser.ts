@@ -10,7 +10,7 @@ export class HttpRequestParser {
     const [method, path, version] = lines[0].split(" ");
     this.httpRequest.setMethod(method);
     this.httpRequest.setPath(path);
-    this.httpRequest.setBody(version);
+    this.httpRequest.setVerison(version);
     // Parse headers
     let i = 1;
     let headers: Record<string, string> = {};
@@ -22,6 +22,11 @@ export class HttpRequestParser {
     this.httpRequest.setHeaders(headers);
     // Parse the body
     let body = lines.slice(i + 1).join("\r\n");
+
+    if (!body.trim()) {
+      return this.httpRequest;
+    }
+
     this.httpRequest.setBody(body);
     return this.httpRequest;
   }

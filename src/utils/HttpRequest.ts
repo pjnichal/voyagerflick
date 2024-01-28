@@ -1,5 +1,5 @@
 export class HttpRequest {
-  body: string = "";
+  body: string | undefined = undefined;
   headers: Record<string, string> = {};
   method: string = "";
   path: string = "";
