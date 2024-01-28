@@ -22,20 +22,20 @@ export class RouteStore implements IRouteStore {
     return RouteStore.instance;
   }
   public getDeleteRoute(key: string): Function {
-    return this.records["DELETE"][key];
+    return this.records["DELETE"]?.[key];
   }
   public getPutRoute(key: string): Function {
-    return this.records["PUT"][key];
+    return this.records["PUT"]?.[key];
   }
   public getPatchRoute(key: string): Function {
-    return this.records["PATCH"][key];
+    return this.records["PATCH"]?.[key];
   }
   public getGetRoute(key: string): Function {
-    return this.records["GET"][key];
+    return this.records["GET"]?.[key];
   }
 
   public getPostRoute(key: string): Function {
-    return this.records["POST"][key];
+    return this.records["POST"]?.[key];
   }
 
   public getAllRoutes(): Record<string, Record<string, Function>> {
@@ -74,7 +74,9 @@ export class RouteStore implements IRouteStore {
     this.records["GET"][key] = value;
   }
 
-  public removeRoute(key: string): void {
-    delete this.records[key];
+  public removeRoute(method: string, key: string): void {
+    if (this.records[method] && this.records[method][key]) {
+      delete this.records[method][key];
+    }
   }
 }
