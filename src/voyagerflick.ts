@@ -3,35 +3,19 @@ import { HttpRequestParser } from "./utils/HttpRequestParser";
 import { HttpResponse } from "./utils/HttpResponse";
 import { RouteStore } from "./helpers/RouteStore";
 import { HttpRequest } from "./utils/HttpRequest";
-import { GetRequestHandler } from "./helpers/GetRequestHandler";
-import { PostRequestHandler } from "./helpers/PostRequestHandler";
+import { RequestHandler } from "./helpers/RequestHandler";
 
 class VoyagerFlick {
   routeStore = RouteStore.getInstance();
   rawRequest = new HttpRequestParser();
+  requestHandler = RequestHandler.getInstance();
   public listen(port: number, callback: Function) {
     const tcpServer = net.createServer((socket) => {
       console.log("Client connected.");
 
       socket.on("data", (data) => {
         const httpRequest = this.rawRequest.parse(data.toString());
-
-        let response = "";
-        switch (httpRequest.method) {
-          case "GET":
-            response =
-              GetRequestHandler.getInstance().handleGetRequest(httpRequest);
-
-            break;
-          case "POST":
-            response =
-              PostRequestHandler.getInstance().handlePostRequest(httpRequest);
-            break;
-          default:
-            response = `HTTP/1.1 404 SORRY_MATE\r\nContent-Type: text/plain\r\n\r\nHaven't handle this case mate\r\n`;
-            break;
-        }
-
+        let response = this.requestHandler.handleGetRequest(httpRequest);
         socket.write(response);
         socket.end();
       });

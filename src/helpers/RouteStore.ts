@@ -15,22 +15,33 @@ export class RouteStore implements IRouteStore {
   private static instance: RouteStore;
   private records: Record<string, Record<string, Function>> = {};
 
-  private constructor() {}
-  getDeleteRoute(key: string): Function {
-    throw new Error("Method not implemented.");
-  }
-  getPutRoute(key: string): Function {
-    throw new Error("Method not implemented.");
-  }
-  getPatchRoute(key: string): Function {
-    throw new Error("Method not implemented.");
-  }
   public static getInstance(): RouteStore {
     if (!RouteStore.instance) {
       RouteStore.instance = new RouteStore();
     }
     return RouteStore.instance;
   }
+  public getDeleteRoute(key: string): Function {
+    return this.records["DELETE"][key];
+  }
+  public getPutRoute(key: string): Function {
+    return this.records["PUT"][key];
+  }
+  public getPatchRoute(key: string): Function {
+    return this.records["PATCH"][key];
+  }
+  public getGetRoute(key: string): Function {
+    return this.records["GET"][key];
+  }
+
+  public getPostRoute(key: string): Function {
+    return this.records["POST"][key];
+  }
+
+  public getAllRoutes(): Record<string, Record<string, Function>> {
+    return this.records;
+  }
+
   public addPostRoute(key: string, value: Function): void {
     if (!this.records["POST"]) {
       this.records["POST"] = {};
@@ -61,18 +72,6 @@ export class RouteStore implements IRouteStore {
       this.records["GET"] = {};
     }
     this.records["GET"][key] = value;
-  }
-
-  public getGetRoute(key: string): Function {
-    return this.records["GET"][key];
-  }
-
-  public getPostRoute(key: string): Function {
-    return this.records["POST"][key];
-  }
-
-  public getAllRoutes(): Record<string, Record<string, Function>> {
-    return this.records;
   }
 
   public removeRoute(key: string): void {
