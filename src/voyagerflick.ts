@@ -37,6 +37,24 @@ class VoyagerFlick {
   ) {
     this.routeStore.addPostRoute(path, method);
   }
+  public patch(
+    path: string,
+    method: (req: HttpRequest, res: HttpResponse) => void
+  ) {
+    this.routeStore.addPatchRoute(path, method);
+  }
+  public delete(
+    path: string,
+    method: (req: HttpRequest, res: HttpResponse) => void
+  ) {
+    this.routeStore.addDeleteRoute(path, method);
+  }
+  public put(
+    path: string,
+    method: (req: HttpRequest, res: HttpResponse) => void
+  ) {
+    this.routeStore.addPutRoute(path, method);
+  }
 }
 export const voyagerflick = (): VoyagerFlick => {
   let voyagerflickServer;
